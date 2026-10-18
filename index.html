@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <title>Calculadora</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #97df94;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: #000000;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 420px;
+            padding: 25px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        .entrada {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .entrada label {
+            display: block;
+            font-size: 15px;
+            margin-bottom: 8px;
+            color: #666;
+        }
+
+        #valor {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 36px;
+            font-weight: 600;
+            text-align: right;
+            background: transparent;
+        }
+
+        .resultado {
+            background: white;
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .nome {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .valor-resultado {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .percentual {
+            display: block;
+            font-size: 13px;
+            color: #777;
+            font-weight: normal;
+            margin-top: 3px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <h1>Calculadora</h1>
+
+        <div class="entrada">
+            <label for="valor">Valor total</label>
+            <input
+                type="text"
+                id="valor"
+                inputmode="numeric"
+                autocomplete="off"
+                placeholder="R$ 0,00"
+            >
+        </div>
+
+        <div class="resultado">
+            <div>
+                <div class="nome">Guardar</div>
+                <span class="percentual">10% do valor</span>
+            </div>
+
+            <div class="valor-resultado" id="guardar">
+                R$ 0,00
+            </div>
+        </div>
+
+        <div class="resultado">
+            <div>
+                <div class="nome">Cantinho</div>
+                <span class="percentual">40% dos 90% restantes</span>
+            </div>
+
+            <div class="valor-resultado" id="cantinho">
+                R$ 0,00
+            </div>
+        </div>
+
+        <div class="resultado">
+            <div>
+                <div class="nome">Salário</div>
+                <span class="percentual">60% dos 90% restantes</span>
+            </div>
+
+            <div class="valor-resultado" id="salario">
+                R$ 0,00
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const campo = document.getElementById("valor");
+
+        const guardar = document.getElementById("guardar");
+        const cantinho = document.getElementById("cantinho");
+        const salario = document.getElementById("salario");
+
+        function formatarMoeda(valor) {
+            return valor.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            });
+        }
+
+        function calcular() {
+
+            // Remove tudo que não for número
+            const numeros = campo.value.replace(/\D/g, "");
+
+            // Converte os últimos dois números em centavos
+            const valor = Number(numeros) / 100;
+
+            // 10% do valor total
+            const valorGuardar = valor * 0.10;
+
+            // Valor restante depois dos 10%
+            const restante = valor - valorGuardar;
+
+            // 40% e 60% dos 90% restantes
+            const valorCantinho = restante * 0.40;
+            const valorSalario = restante * 0.60;
+
+            // Mostra os resultados
+            guardar.textContent = formatarMoeda(valorGuardar);
+            cantinho.textContent = formatarMoeda(valorCantinho);
+            salario.textContent = formatarMoeda(valorSalario);
+
+            // Mostra o valor digitado como moeda
+            if (numeros === "") {
+                campo.value = "";
+            } else {
+                campo.value = formatarMoeda(valor);
+            }
+        }
+
+        campo.addEventListener("input", calcular);
+    </script>
+    <script>
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("./service-worker.js");
+        });
+    }
+    </script> 
+</body>
+</html>
